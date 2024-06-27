@@ -8,7 +8,7 @@
 2. Ejecutar
 
 ```
-npminstall
+npm install
 ```
 
 3. Tener nest CLI instalado
