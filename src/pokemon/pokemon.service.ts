@@ -24,11 +24,13 @@ export class PokemonService {
   }
 
   async create(createPokemonDto: CreatePokemonDto) {
+
     createPokemonDto.name = createPokemonDto.name.toLocaleLowerCase();
 
     try {
 
       const pokemon = await this.pokemonModel.create(createPokemonDto);
+
       return pokemon;
 
     } catch (error) {
@@ -45,10 +47,11 @@ export class PokemonService {
     return this.pokemonModel.find()
       .limit(limit)
       .skip(offset)
-      .sort({
-        no: 1 //Ordenar la comunma "no" de manera ascendente.
-      })
-      .select('-__v'); //Ocultar la columna "__v".
+    // TODO: Resolver "sort" y "select" para unit testing.
+    // .sort({
+    //   no: 1 //Ordenar la comunma "no" de manera ascendente.
+    // })
+    // .select('-__v'); //Ocultar la columna "__v".
   }
 
   async findOne(term: string) {
@@ -102,18 +105,25 @@ export class PokemonService {
     // Clase no.84.
     const { deletedCount } = await this.pokemonModel.deleteOne({ _id: id });
 
-    if (deletedCount === 0) throw new BadRequestException(`Pokemon with id "${id}" not found`);
+    if (deletedCount === 0) {
+      throw new BadRequestException(`Pokemon with id "${id}" not found`);
+    }
+
 
     return;
   }
 
   // Clase no.81.
   private handleExceptions(error: any) {
+
     if (error.code === 11000) {
       throw new BadRequestException(`Pokemon exists in db ${JSON.stringify(error.keyValue)}`);
     }
+
     console.log(error);
+
     throw new InternalServerErrorException(`Can't create Pokemon - Check server logs`);
+
   }
 
 }
